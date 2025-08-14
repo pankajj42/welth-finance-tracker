@@ -10,7 +10,9 @@ This project uses
 - Prisma ORM - for database - I used PostgresSQL - supabase.
 - arcjet - to add security features like rate limiting.
 - inngest - to run cron jobs - which process recuring transactions - achieving event batching and throttling, to send mails when budget limit reaches 90%, to sends monthly budget reports.
+  npx inngest-cli@latest dev - to run local inngest server - to test various functions
 - resend - to send emails.
+  npm run email - to run the local server - to preview email designs
 - google gemini api - to process receipt images, easing the process of adding transactions.
 - used vercel to deploy the project.
 
