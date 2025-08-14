@@ -3,10 +3,6 @@
 import { db } from "@/lib/prisma";
 import { subDays } from "date-fns";
 
-// Replace with the actual account ID and user ID for seeding
-const ACCOUNT_ID = "c2e7d81a-d0fe-4816-a1b0-4b6e0d75f72c";
-const USER_ID = "89f21535-a53d-4daf-a73f-201d4fbe8ada";
-
 // Categories with their typical amount ranges
 const CATEGORIES = {
 	INCOME: [
@@ -57,12 +53,24 @@ function calculateNextRecurringDate(date, interval) {
 	}
 }
 
-export async function seedTransactions() {
+export async function seedTransactions(ACCOUNT_ID, USER_ID) {
 	try {
-		// Generate 90 days of transactions
+		if (!ACCOUNT_ID || !USER_ID)
+			throw new Error("ACCOUNT_ID and USER_ID are required");
+		const user = await db.user.findUnique({
+			where: { id: USER_ID },
+		});
+
+		const account = await db.account.findUnique({
+			where: { id: ACCOUNT_ID, userId: USER_ID },
+		});
+
+		if (!user) throw new Error("User not found");
+		if (!account) throw new Error("Account not found");
 		const transactions = [];
 		let totalBalance = 0;
 
+		// Generate 90 days of transactions
 		for (let i = 90; i >= 0; i--) {
 			const date = subDays(new Date(), i);
 

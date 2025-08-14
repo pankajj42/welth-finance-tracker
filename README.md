@@ -13,3 +13,6 @@ This project uses
 - resend - to send emails.
 - google gemini api - to process receipt images, easing the process of adding transactions.
 - used vercel to deploy the project.
+
+- To seed the account with some dummy data - you can use the API with query Params - userId, accountId - directly from the database entries.
+  E.g. http://localhost:3000/api/seed?userId=00f67d3f-c3c4-485d-90b6-d83e3da929b7&accountId=8cbf67a4-1a39-473c-9828-4654f3a51c1c
