@@ -2,6 +2,8 @@
 
 Make sure you replicate the .env.example file and create a .env file with all the secrets.
 
+Live at - https://welth-finance-tracker.vercel.app/
+
 This project uses
 
 - NextJS
