@@ -53,7 +53,7 @@ function calculateNextRecurringDate(date, interval) {
 	}
 }
 
-export async function seedTransactions(ACCOUNT_ID, USER_ID) {
+export async function seedTransactionsAction(ACCOUNT_ID, USER_ID) {
 	try {
 		if (!ACCOUNT_ID || !USER_ID)
 			throw new Error("ACCOUNT_ID and USER_ID are required");

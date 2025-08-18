@@ -48,7 +48,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { categoryColors } from "@/data/categories";
-import { bulkDeleteTransactions } from "@/actions/account";
+import { bulkDeleteTransactionsAction } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
@@ -153,7 +153,7 @@ export function NoPaginationTransactionTable({ transactions }) {
 		loading: deleteLoading,
 		fn: deleteFn,
 		data: deleted,
-	} = useFetch(bulkDeleteTransactions);
+	} = useFetch(bulkDeleteTransactionsAction);
 
 	const handleBulkDelete = async () => {
 		if (

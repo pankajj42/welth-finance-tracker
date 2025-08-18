@@ -15,7 +15,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { updateBudget } from "@/actions/budget";
+import { updateBudgetAction } from "@/actions/budget";
 
 export function BudgetProgress({ initialBudget, currentExpenses }) {
 	const [isEditing, setIsEditing] = useState(false);
@@ -28,7 +28,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
 		fn: updateBudgetFn,
 		data: updatedBudget,
 		error,
-	} = useFetch(updateBudget);
+	} = useFetch(updateBudgetAction);
 
 	const percentUsed = initialBudget
 		? (currentExpenses / initialBudget.amount) * 100
