@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { db } from "@/lib/prisma";
 import { subDays } from "date-fns";
@@ -38,19 +38,62 @@ function getRandomCategory(type) {
 	return { category: category.name, amount };
 }
 
-function calculateNextRecurringDate(date, interval) {
+function calculateNextRecurringDate(rawDate, interval) {
+	const date = new Date(rawDate);
 	switch (interval) {
 		case "DAILY":
-			return new Date(date.setDate(date.getDate() + 1));
+			date.setDate(date.getDate() + 1);
+			break;
 		case "WEEKLY":
-			return new Date(date.setDate(date.getDate() + 7));
+			date.setDate(date.getDate() + 7);
+			break;
 		case "MONTHLY":
-			return new Date(date.setMonth(date.getMonth() + 1));
+			date.setMonth(date.getMonth() + 1);
+			break;
 		case "YEARLY":
-			return new Date(date.setFullYear(date.getFullYear() + 1));
+			date.setFullYear(date.getFullYear() + 1);
+			break;
 		default:
 			return date;
 	}
+	return date;
+}
+
+function generateRecurrencesUntilNow(baseTransaction) {
+	if (!baseTransaction.isRecurring || !baseTransaction.recurringInterval) {
+		return { recurrences: [], nextRecurringDate: baseTransaction.nextRecurringDate };
+	}
+
+	const recurrences = [];
+	let nextDate = baseTransaction.nextRecurringDate ?
+				new Date(baseTransaction.nextRecurringDate) : 
+				calculateNextRecurringDate(
+					baseTransaction.date,
+					baseTransaction.recurringInterval
+				);
+	const now = new Date();
+
+	while (nextDate <= now) {
+		recurrences.push({
+			id: crypto.randomUUID(),
+			type: baseTransaction.type,
+			amount: baseTransaction.amount,
+			description: `${baseTransaction.description} (Recurring)`,
+			date: nextDate,
+			category: baseTransaction.category,
+			status: "COMPLETED",
+			userId: baseTransaction.userId,
+			accountId: baseTransaction.accountId,
+			isRecurring: false,
+			createdAt: nextDate,
+			updatedAt: nextDate,
+		});
+
+		nextDate = calculateNextRecurringDate(nextDate, baseTransaction.recurringInterval);
+		if (recurrences.length > 1000) break;
+	}
+
+	return { recurrences, nextRecurringDate: nextDate };
 }
 
 export async function seedTransactionsAction(ACCOUNT_ID, USER_ID) {
@@ -101,18 +144,27 @@ export async function seedTransactionsAction(ACCOUNT_ID, USER_ID) {
 					id: crypto.randomUUID(),
 					type,
 					amount,
-					description: `${
-						type === "INCOME" ? "Received" : "Paid for"
-					} ${category}`,
+					description: `${type === "INCOME" ? "Received" : "Paid for"} ${category}`,
 					date,
 					category,
 					status: "COMPLETED",
 					userId: USER_ID,
 					accountId: ACCOUNT_ID,
+					isRecurring: recurringInfo.isRecurring || false,
 					createdAt: date,
 					updatedAt: date,
 					...recurringInfo,
 				};
+				if (transaction.isRecurring) {
+					const { recurrences, nextRecurringDate } = generateRecurrencesUntilNow(transaction);
+					transaction.nextRecurringDate = nextRecurringDate;
+					if (recurrences.length > 0) {
+						for (const r of recurrences) {
+							totalBalance += r.type === "INCOME" ? r.amount : -r.amount;
+						}
+						transactions.push(...recurrences);
+					}
+				}
 
 				totalBalance += type === "INCOME" ? amount : -amount;
 				transactions.push(transaction);
