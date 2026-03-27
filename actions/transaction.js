@@ -10,8 +10,6 @@ import { formatAmount } from "@/lib/utils";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 const serializeAmount = (obj) => ({
 	...obj,
 	amount: obj.amount.toNumber(),
