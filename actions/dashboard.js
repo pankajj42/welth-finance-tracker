@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import { request } from "@arcjet/next";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { formatAmount } from "@/lib/utils";
 
 const serializeTransaction = (obj) => {
 	const serialized = { ...obj };
@@ -91,7 +92,7 @@ export async function createAccountAction(data) {
 		}
 
 		// Convert balance to float before saving
-		const balanceFloat = parseFloat(data.balance);
+		const balanceFloat = formatAmount(data.balance);
 		if (isNaN(balanceFloat)) {
 			throw new Error("Invalid balance amount");
 		}

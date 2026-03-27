@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { updateBudgetAction } from "@/actions/budget";
+import { formatAmount } from "@/lib/utils";
 
 export function BudgetProgress({ initialBudget, currentExpenses }) {
 	const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +36,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
 		: 0;
 
 	const handleUpdateBudget = async () => {
-		const amount = parseFloat(newBudget);
+		const amount = formatAmount(newBudget);
 
 		if (isNaN(amount) || amount <= 0) {
 			toast.error("Please enter a valid amount");

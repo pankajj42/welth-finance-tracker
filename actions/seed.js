@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { subDays } from "date-fns";
+import { formatAmount } from "@/lib/utils";
 
 // Categories with their typical amount ranges
 const CATEGORIES = {
@@ -27,7 +28,7 @@ const CATEGORIES = {
 
 // Helper to generate random amount within a range
 function getRandomAmount(min, max) {
-	return Number((Math.random() * (max - min) + min).toFixed(2));
+	return formatAmount(Math.random() * (max - min) + min);
 }
 
 // Helper to get random category with amount

@@ -48,7 +48,7 @@ export function AccountChart({ transactions }) {
 
 		// Group transactions by date
 		const grouped = filtered.reduce((acc, transaction) => {
-			const date = format(new Date(transaction.date), "MMM dd");
+			const date = format(new Date(transaction.date), "MMM dd, yyyy");
 			if (!acc[date]) {
 				acc[date] = { date, income: 0, expense: 0 };
 			}

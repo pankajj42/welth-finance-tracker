@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
+import { formatAmount } from "@/lib/utils";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -281,7 +284,7 @@ export async function scanReceiptAction(file) {
 		try {
 			const data = JSON.parse(cleanedText);
 			return {
-				amount: parseFloat(data.amount),
+				amount: formatAmount(data.amount),
 				date: new Date(data.date),
 				description: data.description,
 				category: data.category,

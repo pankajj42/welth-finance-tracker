@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CreateAccountDrawer } from "@/components/create-account-drawer";
-import { cn } from "@/lib/utils";
+import { cn, formatAmount } from "@/lib/utils";
 import {
 	createTransactionAction,
 	updateTransactionAction,
@@ -87,7 +87,7 @@ export function AddTransactionForm({
 	const onSubmit = (data) => {
 		const formData = {
 			...data,
-			amount: parseFloat(data.amount),
+			amount: formatAmount(data.amount),
 		};
 
 		if (editMode) {
